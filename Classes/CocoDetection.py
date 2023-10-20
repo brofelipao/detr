@@ -1,5 +1,5 @@
 import torchvision
-from constants import *
+from Utils.constants import *
 
 class CocoDetection(torchvision.datasets.CocoDetection):
     def __init__(

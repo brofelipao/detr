@@ -1,11 +1,9 @@
 import pytorch_lightning as pl
 from transformers import DetrForObjectDetection
 import torch
-from ..Utils.utils import id2label
-from ..Utils.dataloaders import TRAIN_DATALOADER, VAL_DATALOADER
 
 class Detr(pl.LightningModule):
-    def __init__(self, lr, lr_backbone, weight_decay):
+    def __init__(self, lr, lr_backbone, weight_decay, id2label, CHECKPOINT):
         super().__init__()
         self.model = DetrForObjectDetection.from_pretrained(
             pretrained_model_name_or_path=CHECKPOINT, 

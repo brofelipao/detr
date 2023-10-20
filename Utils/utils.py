@@ -2,12 +2,6 @@ import random
 import os
 from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
-from transformers import DetrImageProcessor
-from datasets import *
-
-image_processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
-categories = TEST_DATASET.coco.cats
-id2label = {k: v['name'] for k,v in categories.items()}
 
 def show_test_img(TRAIN_DATASET):
     image_ids = TRAIN_DATASET.coco.getImgIds()
