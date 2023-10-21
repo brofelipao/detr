@@ -1,31 +1,51 @@
 import random
 import os
-from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
+import pandas as pd
+from transformers import DetrImageProcessor
+import torch
+import supervision as sv
+import cv2
 
-def show_test_img(TRAIN_DATASET):
-    image_ids = TRAIN_DATASET.coco.getImgIds()
+
+# Variables
+MODEL_NAME = "facebook/detr-resnet-50"
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+MODEL_PATH = 'Checkpoints/finetuned-detr'
+image_processor = DetrImageProcessor.from_pretrained(MODEL_NAME)
+
+
+def show_test_img(DATASET):
+    categories = DATASET.coco.cats
+    id2label = {k: v['name'] for k,v in categories.items()}
+    image_ids = DATASET.coco.getImgIds()
     image_id = random.choice(image_ids)
-    # load image and annotatons 
-    image = TRAIN_DATASET.coco.loadImgs(image_id)[0]
-    annotations = TRAIN_DATASET.coco.imgToAnns[image_id]
-    image_path = os.path.join(TRAIN_DATASET.root, image['file_name'])
-    image = Image.open(image_path)
-
-    fig, ax = plt.subplots(1)
-    
-    annotations = TRAIN_DATASET.coco.imgToAnns[image_id]
-    draw = ImageDraw.Draw(image, "RGBA")
-
-    cats = TRAIN_DATASET.coco.cats
-    id2label = {k: v['name'] for k,v in cats.items()}
-
-    for annotation in annotations:
-        box = annotation['bbox']
-        class_idx = annotation['category_id']
-        x,y,w,h = tuple(box)
-        draw.rectangle((x,y,x+w,y+h), outline='red', width=1)
-        
-    plt.imshow(image)
+    box_annotator = sv.BoxAnnotator()
+    image = DATASET.coco.loadImgs(image_id)[0]
+    annotations = DATASET.coco.imgToAnns[image_id]
+    image_path = os.path.join(DATASET.root, image['file_name'])
+    image = cv2.imread(image_path)
+    detections = sv.Detections.from_coco_annotations(coco_annotation=annotations)
+    labels = [f"{id2label[class_id]}" for _, _, class_id, _ in detections]
+    frame_ground_truth = box_annotator.annotate(scene=image.copy(), detections=detections, labels=labels)
+    plt.imshow(cv2.cvtColor(frame_ground_truth, cv2.COLOR_BGR2RGB))
     plt.show()
     
+    
+def generage_graphs(path_csv):
+    data = pd.read_csv(path_csv)
+    metrics = data.columns
+    
+    train_metrics = [met for met in metrics if 'train' in met]
+    val_metrics = [met for met in metrics if 'validation' in met]
+    
+    for metric in train_metrics:
+        plt.figure(figsize=(10, 5))
+        plt.plot(data[metric], label=metric, marker='o')
+        plt.title(metric)
+        plt.xlabel('Index')
+        plt.ylabel(metric)
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+        

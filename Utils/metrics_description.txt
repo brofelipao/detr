@@ -1,0 +1,23 @@
+validation/loss: Esta é a perda total durante a validação. Geralmente, é uma combinação de várias outras perdas (como perda de classificação, perda de caixa delimitadora, etc.). Uma perda menor indica um melhor desempenho do modelo durante a validação.
+
+validation_loss_ce: Esta é a perda de entropia cruzada durante a validação. A entropia cruzada é comumente usada em problemas de classificação para medir a diferença entre as probabilidades previstas e as verdadeiras.
+
+validation_loss_bbox: Esta é a perda associada às caixas delimitadoras (bounding boxes) durante a validação. Em tarefas de detecção de objetos, essa métrica mede o quão bem o modelo prevê a localização dos objetos na imagem.
+
+epoch: É uma iteração completa através do conjunto de treinamento. O treinamento de modelos geralmente envolve várias épocas para permitir que o modelo aprenda e refine suas previsões.
+
+validation_loss_giou: Esta é a perda IoU generalizada (Generalized Intersection over Union) durante a validação. A métrica IoU é uma medida de quão bem as caixas delimitadoras previstas se sobrepõem às verdadeiras. A perda gIoU é uma extensão que também leva em consideração a forma e o tamanho das caixas.
+
+validation_cardinality_error: Esta métrica mede o erro na estimativa do número de objetos em uma imagem durante a validação.
+
+step: Representa uma iteração individual durante o treinamento. Cada etapa envolve processar um lote de dados.
+
+train_loss_ce: Similar ao validation_loss_ce, mas medido durante o treinamento.
+
+train_loss_bbox: Similar ao validation_loss_bbox, mas medido durante o treinamento.
+
+training_loss: Esta é a perda total durante o treinamento. Como a validation/loss, é geralmente uma combinação de várias outras perdas.
+
+train_cardinality_error: Similar ao validation_cardinality_error, mas medido durante o treinamento.
+
+train_loss_giou: Similar ao validation_loss_giou, mas medido durante o treinamento.
