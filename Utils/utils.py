@@ -2,18 +2,20 @@ import random
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
-from transformers import DetrImageProcessor
+from transformers import DetrImageProcessor, AutoImageProcessor
 import torch
 import supervision as sv
 import cv2
 
 
 # Variables
-MODEL_NAME = "facebook/detr-resnet-50"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_PATH = 'Checkpoints/finetuned-detr'
-image_processor = DetrImageProcessor.from_pretrained(MODEL_NAME)
+# MODEL_NAME = "facebook/detr-resnet-50"
+MODEL_NAME = "facebook/deformable-detr-detic"
 
+MODEL_PATH = 'Checkpoints/detr'
+# image_processor = DetrImageProcessor.from_pretrained(MODEL_NAME)
+image_processor = AutoImageProcessor.from_pretrained(MODEL_NAME)
 
 def show_test_img(DATASET):
     categories = DATASET.coco.cats
@@ -31,7 +33,6 @@ def show_test_img(DATASET):
     plt.imshow(cv2.cvtColor(frame_ground_truth, cv2.COLOR_BGR2RGB))
     plt.show()
     
-    
 def generage_graphs(path_csv):
     data = pd.read_csv(path_csv)
     metrics = data.columns
@@ -40,6 +41,16 @@ def generage_graphs(path_csv):
     val_metrics = [met for met in metrics if 'validation' in met]
     
     for metric in train_metrics:
+        plt.figure(figsize=(10, 5))
+        plt.plot(data[metric], label=metric, marker='o')
+        plt.title(metric)
+        plt.xlabel('Index')
+        plt.ylabel(metric)
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+        
+    for metric in val_metrics:
         plt.figure(figsize=(10, 5))
         plt.plot(data[metric], label=metric, marker='o')
         plt.title(metric)

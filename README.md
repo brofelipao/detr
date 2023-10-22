@@ -18,3 +18,6 @@ https://stackoverflow.com/questions/56431461/how-to-remove-cuda-completely-from-
 * Supervision: 0.3.0 
 * Transformers:  4.34.1
 * pytorch_lightning: 2.1.0
+
+# Documentacoes
+* Deformable-Detr: https://huggingface.co/facebook/deformable-detr-detic

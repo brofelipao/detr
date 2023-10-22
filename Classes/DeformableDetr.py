@@ -1,18 +1,18 @@
 import pytorch_lightning as pl
-from transformers import DetrForObjectDetection, DetrConfig
+from transformers import DeformableDetrForObjectDetection, DeformableDetrConfig
 import torch
 
-class Detr(pl.LightningModule):
+class DeformableDetr(pl.LightningModule):
     def __init__(self, lr, lr_backbone, weight_decay, id2label, train_dataloader, val_dataloader):
         super().__init__()
-        CHECKPOINT = "facebook/detr-resnet-50"
-        config = DetrConfig.from_pretrained(
+        CHECKPOINT = "facebook/dino-vits16"
+        config = DeformableDetrConfig.from_pretrained(
             pretrained_model_name_or_path=CHECKPOINT,
             id2label=id2label,
             num_queries=320
         )
 
-        self.model = DetrForObjectDetection.from_pretrained(
+        self.model = DeformableDetrForObjectDetection.from_pretrained(
             pretrained_model_name_or_path=CHECKPOINT,
             config=config,
             ignore_mismatched_sizes=True
